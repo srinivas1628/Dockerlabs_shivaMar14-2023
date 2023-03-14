@@ -1,0 +1,456 @@
+c
+Name: Kubernetes Batch | Siva Reddy
+
+Project should be success
+Client should get money
+
+Parameters
+--------------
+perfomance
+less cost
+resources optmisation
+scalability
+reliability
+fast provisioning
+security --> Good
+immutable
+
+Deliver the application asap
+less defects
+
+SDLC --> Software development life cycle
+
+Requirements
+Design
+development
+Deployment
+Testing
+Maintainance
+
+Problem --> we will have solution
+
+tech now may defnitely have some challenges, we will the challenges with new tech with new version or tech
+
+continous development in software technologies
+
+WATERFALL MODEl
+----------------
+1990's
+
+2 years of time to deliver this application
+
+development
+1 year over then we get seriousness
+then we start development
+
+deployment --> DEV and QA
+
+testers --> some testing
+
+defects --> re development again
+
+deployment into PROD
+
+lot of errors
+
+type of errors
+---------------------
+1. Development errors i.e related to functionality
+ through testing we need to find these errors before clients does
+2. Build and configuration errors --
+	not able to connect database
+	firewall errors
+	server memory is less
+
+DEV, QA, PERF, UAT, PRE-PROD, PROD
+--------------------
+Buy a server
+Install OS
+n/w and firewalls
+install few packages and dependencies
+application server --> JRE, .NET, Python
+install application
+
+Agile Technology
+----------------------
+Sprint-1 = 2 weeks
+--------
+SignUp and Login
+
+1st week development
+2nd week deployment and testing
+
+DEV, UAT, PRE-PROD
+------------------
+Build
+Testing
+Deployment
+
+Ask for your client to test
+
+1 --> 5 defects
+100 --> 20 defects
+
+1. development errors
+2. build and configuration errors
+
+collect feedback
+
+Sprint-2 product catalogue
+------------------------
+1. new development
+2. address the defects in previous sprints
+
+sprint-n
+------------------
+lot of testing
+addressed many errors and feedback
+perfect project
+
+
+DevOps = Process improvment in Agile
+----------------------
+whatever you develop for the any day deploy it and test it
+
+FirstName -----------
+
+Build, deploy  this and test this
+
+1 defect, easy to fix
+
+number of testing cycles are increased exponentially
+14 times
+Projects more success
+
+Physcial Server vs Virtualisation vs Containerisation
+=====================================================
+Frontend --> HTML, JS, CSS
+Backend --> JAVA, .NET
+
+REST API
+
+amazon frontend
+amazon backend --> user, cart, 
+A single problem in website can make entire project down.
+
+Microservices
+-----------------------
+modules/components
+--------------
+User project is different -> API --> JAVA
+cart project is different --> .NET
+payment is different --> Python
+order management is different
+
+Development can be in multiple languages
+
+Project is very small
+-------------
+Containerisation
+--------------
+get base OS --> official vendors [bare minimum]
+install few packages and dependencies
+application server --> JRE, .NET, Python
+install application
+Image
+Container
+
+create image = base OS + system packages and dependencies + application run time + application
+Ship image into multiple environments --> Container
+
+Immutable, build once and run anywhere
+
+configuration related erros will be addressed because of immutable nature
+--------------------
+
+===============================================================================================
+Session-2 Agenda
+----------------
+Create Security Group
+Launch EC2
+Connect through Putty and Super putty
+Install Docker in EC2
+Docker commands
+
+Container is the running instance of docker image
+Container - mini server
+
+docker images --> will show the images available in the server
+docker pull <name>:<version> --> will pull the image from docker hub
+docker create <image-id> - create container out of image
+docker ps - will show running containers
+docker ps -a --> will show all containers
+docker start <container-id> - will start the container
+docker stop <container-id> -> it will stop the container
+docker rm <container-id> -> delete the container
+docker rmi <image-id> - will remove images
+docker run = docker pull + create + start
+docker run by default runs the container in foreground attaches to the screen
+docker run -d
+docker run -d -p 80:80 nginx
+docker run -d -p <any-host-port>:80 nginx
+netstat -lntp --> all used
+
+i want to login to the nginx container and see what is there inside
+
+docker exec -it <ID> bash
+CTRL + D to come out
+assign one port on host that should map the container
+
+docker build -t <IMAGE_NAME>:<TAG> . && docker run -p <HOST_PORT>:<CONTAINER_PORT> --name <CONTAINER_NAME> <IMAGE_NAME>:<TAG>
+
+docker build -t my-app:1.0 . && docker run -p 8080:80 --name my-app-container my-app:1.0
+
+docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)   {To stop and remove all Docker containers at once,}
+You can use the docker container prune command to remove all stopped containers:
+# docker container prune
+
+To delete all Docker images at once, you can use the following command:
+
+# docker rmi $(docker images -a -q)
+# docker image prune   (command to remove all unused images)
+
+
+
+===========================================================================
+DockerFile;
+docker file is declartive way of creaing our own images and containers based on 
+
+FROM should be the first instruction in your Dockerfile >> is base oS  
+its having specifed image like almalinux,ubnutu,redhat...based on the requirement it contains the necessary dependencies and system libraries, you can avoid the need to install them manually in your Dockerfile, which can save time and reduce the size of your final Docker image.
+
+RUN
+Run instruction we use to install software, packages and other tasks. It runs at the time of image building.
+
+CMD
+CMD is the instruction that runs the container. It should run in foreground and it should run for infinite time.
+ CMD ["sleep", "20"] there should be only one CMD instruction. if we give multiple the last one will be considered 
+
+RUN vs CMD
+RUN command will execute at the time of image creation.
+CMD command will execute at the time of running container.
+
+LABEL
+LABEL instruction is useful to give some metadata information.
+example: FROM almalinux
+LABEL AUTHOR="SIVAKUMAR" \
+      COURSE="DOCKER" \
+      DURATION="25 HRS"
+if u have multiple images u can use filter \\
+# docker images --filter "label = AUTHOR=SIVAKUMAR"
+
+EXPOSE
+EXPOSE instruction is useful to tell the users of the image about the ports and protocols image/container is opening.
+ It will not have any functionality it used only to tell the information.
+FROM almalinux
+EXPOSE 8080/tcp
+
+ENV
+ENV is the instruction to provide environment variables to image and container. You can override env variables at runtime
+FROM almalinux
+ENV AUTHOR="SIVAKUMAR" \
+       DURATION="25HR" \
+       COURSE="DOCKER"
+
+COPY
+COPY instruction is useful to copy the files from local to image.
+
+try
+docker run -d -p 80:80 techworldwithsiva/copy:v1
+
+FROM almalinux:8
+RUN yum install nginx -y
+RUN rm -rf /usr/share/nginx/html/index.html
+COPY qi /usr/share/nginx/html/
+CMD ["nginx", "-g", "daemon off;"]
+
+ADD
+ADD is same as COPY. It is useful to copy files from local to container. But it has 2 extra capabilities.
+
+ADD can download the file directly from internet to the container.
+ADD can untar/unzip the file directly into the container.
+
+ENTRYPOINT
+ENTRYPOINT is also used to run the container just like CMD. But there are few differences.
+
+We cant override ENTRYPOINT, but we can override CMD.
+We can't override ENTRYPOINT, if you try to do so it will go and append to the ENTRYPOINT command.
+If you use CMD and ENTRYPOINT and dont give any command from terminal, CMD acts as argument provider to ENTRYPOINT.
+CMD will supply default arguments to ENTRYPOINT.
+You can always override CMD arguments from runtime.
+You can stop misusing your image with other commands.
+
+FROM almalinux
+#CMD ["ping", "-c5", "google.com"]
+CMD ["google.com"]
+ENTRYPOINT ["ping", "-c5"]
+#ping -c5 google.com ping -c2 facebook.com
+
+
+USER
+It is used to run the commands as particular user.
+FROM almalinux
+RUN adduser nginx
+USER nginx
+RUN touch /tmp/hello.txt
+
+WORKDIR
+WORKDIR is used to set the path to the image while creating.
+FROM almalinux
+WORKDIR /tmp
+RUN touch hello.txt
+
+ARG
+ARG is used to supply few variables at the image creation.
+
+ARG is the only instruction you can use before FROM. ARG declared before cant be accessed after FROM.
+Using ENV and ARG for best results.
+Create one env variable and assign the value of ARG to that.
+Then we can access ARG values through ENV both in image and container.
+
+ARG VERSION
+FROM almalinux:${VERSION:-8}
+ARG GREETING="HI Good Morning"
+ENV GREET=${GREETING}
+RUN echo "$GREETING"
+RUN echo "$VERSION"
+
+ONBUILD
+ONBUILD is used to set some hard guidelines to the image.
+
+FROM almalinux
+RUN yum install nginx -y
+# when image creator is running this below command will not run. when some one else tries to use your image then it will run
+ONBUILD ADD simple.txt /tmp/
+
+Docker Volume
+=================
+
+FROM ubuntu
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+=================
+Docker volumes have several advantages over storing data within a container's filesystem. First, volumes can be shared between containers, allowing multiple containers to access the same data. Second, volumes can be backed up and restored, making it easier to move data between different environments. Finally, volumes are more efficient for storing large amounts of data, since they do not need to be included in the container image and can be managed separately.
+
+cd/usr/share/nginx/html/
+
+container have no file system it will use the host file system 
+in Docker volumes if container delete also container 2 will attach to the same data we can do in docker volumes.
+
+wher docekr store information cd /var/lib/docker save full infor 
+cd  overlay2  >> here it will create random and id for that it stores the information.
+
+cd /var/lib/docker/overlay2 >> ls -l
+
+Cd /var/lib/docker/volumes >>  will have volumes
+
+docker volume create nginx(voulme name)
+docker volume ls
+docker volume inspect nginx >> will the volume location
+
+docler run -d -v nginx:
+ -p host-port:containerport
+ -v host-path: contianer-path
+docker run -d -v nginx:/usr/share/nginx/html -p 80:80 nginx
+
+cd /var/lib/docker/volumes/nginx/_data/
+ls -l
+
+echo "Hello Docker" > hello.html
+echo "hi Goodeving" > hi.html
+
+container data is emphermal it always refer the host system/server File system by default when you remove the container data will be deteled but if u create docker voulme or mount into the container the data will not be deleted by default it will store the data you can again same path to the another container u can still access the data.
+
+/var/lib/docker/voulmes
+
+mkdir test-data
+docker run -d -v /home/ec2-user/test-data:/usr/share/nginx/html -p 8080:80 nginx 
+cd /test-data >> echo Hi > hi.html
+
+Anmouns volumes will not mange by docker.
+
+FROM ubuntu
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+
+docker build -t vol:v1 .
+docker run -it vol:v1
+
+# ls -l
+inside host you will have a directory for volume.
+This directory can be mounted with any path inside the container.
+
+/var/lib/docker/volumes/nginx_data:/usr/share/nginx/html
+
+----------------------
+docker volume create mysql-data
+dockr run -d -v mysql-data:/var/lib/mysql mysql
+docker ps -a
+docker logs sqlcontainreid (mentionhere)
+dockr run -d -v mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root123 mysql
+
+docker ps 
+docker exec -it containerid(mydql) bash
+# mysql -u root -proot123
+# create database student;
+# show databases;
+exit
+docker rm -f container id (mysql)
+sudo su  -
+cd /var/lib/docekr/volumes/mysql-data/_data/
+ls -l
+pwd
+
+-------------
+data is persistent
+volumes are easier to backup and migrate
+3 types of annymous volumes, named volumes, hostvolumes or bind volumes
+
+Anonymous volumes: 
+docker run -v /data01 (dirname) var/lib/docker/volumes/random-hash /-data
+
+Named volumes :
+docker run -v vtwebuat02_vol(volumename):/data01 (directoryName)
+
+/var/lib/docker/volumes/vtwebuat02_vol/-data
+
+Host volumes or bind volumes
+
+$docker run -v /opt/data01(dir):/data01  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
